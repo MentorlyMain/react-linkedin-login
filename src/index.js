@@ -11,8 +11,13 @@ export default class LinkedIn extends React.Component {
     clientId: React.PropTypes.string,
     callback: React.PropTypes.func.isRequired,
     className: React.PropTypes.string,
+    redirectUri: React.PropTypes.string,
     text: React.PropTypes.node,
     scope: React.PropTypes.arrayOf(React.PropTypes.string)
+  }
+
+  static defaultProps = {
+    redirectUri: window.location.href
   }
 
   componentDidMount () {
@@ -21,25 +26,28 @@ export default class LinkedIn extends React.Component {
 
   @autobind
   start () {
+    const { clientId, scope, redirectUri } = this.props
     const state = Math.random().toString(36).substring(7)
-    const clientId = this.props.clientId
-    const scope = this.props.scope
+
     localStorage.linkedInReactLogin = state
-    localStorage.linkedInReactLoginRedirectUri = window.location.href
-    window.location.href = getURL({ clientId, state, scope })
+    localStorage.linkedInReactLoginRedirectUri = redirectUri
+
+    window.location.href = getURL({ clientId, state, scope, redirectUri })
   }
 
   @autobind
   restart () {
     const state = localStorage.linkedInReactLogin
     const redirectUri = localStorage.linkedInReactLoginRedirectUri
-    if (!redirectUri) return
-    if (!state) return
-    if (state !== getQueryParameter('state')) return
-    if (!getQueryParameter('code')) return
     const code = getQueryParameter('code')
-    reset()
-    this.props.callback({code, redirectUri})
+
+    if (!code || !state || state !== getQueryParameter('state')) {
+      return
+    } else {
+      reset()
+      this.props.callback({code, redirectUri})
+    }
+
   }
 
   render () {

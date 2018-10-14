@@ -1,19 +1,19 @@
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import autobind from 'autobind-decorator'
 import getURL from './getURL'
 import getQueryParameter from './getQueryParameter'
 import reset from './reset'
 /* global localStorage */
 
-export default class LinkedIn extends React.Component {
-
+export default class LinkedIn extends Component {
   static propTypes = {
-    clientId: React.PropTypes.string,
-    callback: React.PropTypes.func.isRequired,
-    className: React.PropTypes.string,
-    redirectUri: React.PropTypes.string,
-    text: React.PropTypes.node,
-    scope: React.PropTypes.arrayOf(React.PropTypes.string)
+    clientId: PropTypes.string,
+    callback: PropTypes.func.isRequired,
+    className: PropTypes.string,
+    redirectUri: PropTypes.string,
+    text: PropTypes.node,
+    scope: PropTypes.arrayOf(PropTypes.string)
   }
 
   static defaultProps = {
@@ -47,7 +47,6 @@ export default class LinkedIn extends React.Component {
       reset()
       this.props.callback({code, redirectUri})
     }
-
   }
 
   render () {
@@ -57,5 +56,4 @@ export default class LinkedIn extends React.Component {
       </button>
     )
   }
-
 }
